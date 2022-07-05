@@ -1,0 +1,16 @@
+.new-post {
+  margin-top: 10px;
+  border: 1px solid #cfd4d9;
+  border-radius: 5px;
+}
+
+.btn {
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.post-info {
+  margin-top:8px;
+  margin-bottom: 8px;
+  border-top: 1px solid rgb(207, 212, 217);
+}

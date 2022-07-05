@@ -1,5 +1,45 @@
 {% extends "network/layout.html" %}
 
+{% load static %}
+{% block script %}
+    <script src="{% static 'network/app.js' %}"></script>
+{% endblock %}
+
 {% block body %}
-    TODO
+    <div class="container">
+        <!-- add post success view -->
+        <div class="row" id="add_post_success" style="display: none">
+            <div class="alert alert-success col-12">
+                Success!        <a href="https://www.google.com/" onclick="return hide('add_post_success')">OK</a>
+            </div>
+        </div>
+        <!-- add post failure view -->
+        <div class="row" id="add_post_failure" style="display: none">
+            <div class="alert alert-success col-12">
+                Failed, please try again later (T⌓T)        <a href="https://www.google.com/" onclick="return hide('add_post_failure')">OK</a>
+            </div>
+        </div>
+        {% if user.is_authenticated %}
+            <!-- add post view -->
+            <div id="add_post" style="display: none">
+                <div class="row new-post">
+                    <div class="col-12">
+                        <form id="new_post_form">
+                            <div class="form-group">
+                                <label for="new_post_content">New Post Here</label>
+                                <textarea class="form-control" id="new_post_content" rows="3"></textarea>
+                                <input type="submit" class="btn btn-primary">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <!-- posts view -->
+        <div>
+            <div id="posts">
+
+            </div>
+        </div>
+    </div>
 {% endblock %}

@@ -1,10 +1,14 @@
+import json
+from tkinter import W
+from turtle import pos
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import User, Post
 
 
 def index(request):
@@ -63,3 +67,47 @@ def register(request):
         return render(request, "network/register.html")
 
 
+# apis
+@login_required
+def new_post(request):
+    '''
+    creates a new post\n
+    request body should be in this way\n
+    {\n
+        "content": content\n
+    }
+    '''
+    if request.method != "POST":
+        return JsonResponse({"error": "POST method required"}, status=400)
+
+    try:
+        body = json.loads(request.body)
+        if body["content"] == "":
+            return JsonResponse({"status": "fail", "error": "content cannot be blank"})
+        post = Post.objects.create(sender=request.user, content=body["content"])
+        post.save()
+        return JsonResponse({"status": "success"}, status=200)
+    except:
+        return JsonResponse({"status": "fail"}, status=502)
+
+
+@login_required
+def user_posts(request):
+    raise NotImplementedError
+
+
+@login_required
+def all_posts(request):
+    '''
+    return a list of all not deleted post
+    '''
+    if request.method != "POST":
+        return JsonResponse({"error": "POST method required"}, status=400)
+    
+    try:
+        response = {"status": "success"}
+        all_posts = Post.objects.all()
+        response["posts"] = [{"sender": post.sender.username, "content": post.content} for post in all_posts]
+        return JsonResponse(response)
+    except:
+        return JsonResponse({"status": "fail"}, status=502)
